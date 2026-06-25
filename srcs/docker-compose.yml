@@ -1,0 +1,62 @@
+services: # represente une image
+  mariadb:
+    image: mariadb
+    build: ./requirements/mariadb
+    volumes: 
+      - mariadb_database:chemin/dans le container
+    networks:
+      - inception-network
+    # depends_on: nginx
+    # command
+    # environment
+    # healthcheck
+    # restart
+    # secrets
+    # toujours mettre des guillemets  pour appeller les variables du .env
+
+  
+  nginx:
+    image: nginx
+    build: ./requirements/nginx
+    networks:
+      - inception-network
+    # ports :
+    # depends_on
+    # command
+    # environment
+    # healthcheck
+    # restart
+    # secrets
+  
+  wordpress:
+    image: wordpress
+    build: ./requirements/wordpress
+    volumes: wp_website_files:chemin/dans/container
+    networks:
+      - inception-network
+    # depends_on: nginx & mariadb?
+    # command
+    # environment
+    # healthcheck
+    # restart
+    # secrets
+
+volumes:
+  # bind mount
+  mariadb_database:
+  wp_website_files:
+
+networks:
+  inception_network:
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+  db_root_password:
+    file: ./db_root_password.txt
+  credentials:
+    file: ./credentials
+
+  
+
+
