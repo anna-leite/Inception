@@ -3,6 +3,8 @@ FROM debian:bookworm
 WORKDIR /app
 
 COPY tools/init.sh /app/init.sh
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+COPY conf/my.cnf /etc/mysql/
 
 RUN apt update && \
 apt install -y mariadb-server mariadb-client
