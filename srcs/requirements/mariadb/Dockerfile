@@ -7,6 +7,7 @@ COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY conf/my.cnf /etc/mysql/
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_PRIORITY=critical
 
 RUN apt-get update && \
 apt-get install -y --no-install-recommends mariadb-server && \
