@@ -6,8 +6,10 @@ COPY tools/init.sh /app/init.sh
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY conf/my.cnf /etc/mysql/
 
-RUN apt-get update && \
-apt-get install -y mariadb-server mariadb-client && \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && \
+apt install -y mariadb-server mariadb-client && \
 rm -rf /var/lib/apt/lists/*
 
 CMD ["bash", "init.sh"]
