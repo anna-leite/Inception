@@ -1,61 +1,78 @@
 services: # represente une image
   mariadb:
-    image: mariadb
     build: ./requirements/mariadb
+    image: mariadb
     volumes: 
-      - mariadb_database:chemin/dans le container
+      - mariadb_database:/var/lib/mysql
     networks:
-      - inception-network
+      - network
+    environment:
+      MARIA_PASSWORD: /run/secrets/db_password
+      MARIA_ROOT_PASSWORD: /run/secrets/db_root_password
+      # pour attribuer a des variable les valeur contenue dans .env
     # depends_on: nginx
     # command
-    # environment
-    # healthcheck
-    # restart
-    # secrets
+    restart: on-failure
+    secrets:
+      - db_password
+      - db_root_password
     # toujours mettre des guillemets  pour appeller les variables du .env
 
   
   nginx:
-    image: nginx
     build: ./requirements/nginx
+    image: nginx
     networks:
-      - inception-network
+      - network
     # ports :
     # depends_on
     # command
     # environment
     # healthcheck
-    # restart
+    restart: on-failure
     # secrets
   
   wordpress:
-    image: wordpress
     build: ./requirements/wordpress
-    volumes: wp_website_files:chemin/dans/container
+    image: wordpress
+    volumes: 
+      - wp_website_files:/var/www/html
     networks:
-      - inception-network
+      - network
     # depends_on: nginx & mariadb?
     # command
     # environment
     # healthcheck
-    # restart
+    restart: on-failure
     # secrets
 
 volumes:
   # bind mount
   mariadb_database:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/login/data/mariadb
+  
   wp_website_files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/login/data/wordpress
 
 networks:
-  inception_network:
+  network:
+    driver: bridge
 
 secrets:
   db_password:
-    file: ./db_password.txt
+    file: ./secrets/db_password.txt
   db_root_password:
-    file: ./db_root_password.txt
+    file: ./secrets/db_root_password.txt
   credentials:
-    file: ./credentials
+    file: ./secrets/credentials
 
   
 
